@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Fully Sick Enhanced Optimized Endorsed Secure Password Generator
+    </title>
+    <style>
+      :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --secondary: #f43f5e;
+        --background: #f8fafc;
+        --card: #ffffff;
+        --text: #334155;
+        --border: #e2e8f0;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          Oxygen,
+          Ubuntu,
+          Cantarell,
+          "Open Sans",
+          "Helvetica Neue",
+          sans-serif;
+      }
+
+      body {
+        background-color: var(--background);
+        color: var(--text);
+        line-height: 1.6;
+        padding: 1rem;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: var(--primary-dark);
+        font-size: 2rem;
+      }
+
+      .card {
+        background-color: var(--card);
+        border-radius: 1rem;
+        box-shadow:
+          0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        padding: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .input-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group {
+        flex: 1;
+        min-width: 200px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+      }
+
+      input[type="text"],
+      input[type="number"] {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        font-size: 1rem;
+      }
+
+      .words-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .word-chip {
+        background-color: var(--primary);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        display: flex;
+        align-items: center;
+        font-size: 0.875rem;
+      }
+
+      .word-chip button {
+        background: none;
+        border: none;
+        color: white;
+        margin-left: 0.5rem;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+
+      .add-word-btn {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .add-word-btn:hover {
+        background-color: var(--primary-dark);
+      }
+
+      .generate-btn {
+        background-color: var(--secondary);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        display: block;
+        margin: 0 auto;
+      }
+
+      .generate-btn:hover {
+        background-color: #e11d48;
+      }
+
+      .password-results {
+        display: none;
+        margin-top: 2rem;
+      }
+
+      .password-card {
+        background-color: var(--card);
+        border-radius: 0.5rem;
+        border: 1px solid var(--border);
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .password-display {
+        font-family: "Courier New", Courier, monospace;
+        font-size: 1.25rem;
+        word-break: break-all;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .copy-btn {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        font-size: 0.875rem;
+      }
+
+      .copy-btn:hover {
+        background-color: var(--primary-dark);
+      }
+
+      .password-stats {
+        display: flex;
+        gap: 1rem;
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        color: #64748b;
+      }
+
+      .strength {
+        padding: 0.25rem 0.5rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      .weak {
+        background-color: #fecaca;
+        color: #b91c1c;
+      }
+
+      .moderate {
+        background-color: #fed7aa;
+        color: #c2410c;
+      }
+
+      .strong {
+        background-color: #bfdbfe;
+        color: #1d4ed8;
+      }
+
+      .very-strong {
+        background-color: #bbf7d0;
+        color: #15803d;
+      }
+
+      .meme-container {
+        position: relative;
+        border: 2px dashed var(--border);
+        border-radius: 1rem;
+        overflow: hidden;
+      }
+
+      .meme-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+        font-size: 1.25rem;
+        text-align: center;
+        padding: 1rem;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 1rem 0.5rem;
+        }
+        .card {
+          padding: 1.5rem 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Enhanced Secure Password Generator</h1>
+
+      <div
+        style="
+          display: flex;
+          flex-wrap: wrap;
+          gap: 2rem;
+          align-items: flex-start;
+        "
+      >
+        <div style="flex: 1; min-width: 300px">
+          <div class="card">
+            <div class="input-group">
+              <div class="form-group" style="flex: 0 0 150px">
+                <label for="num-passwords">Number of Passwords</label>
+                <input
+                  type="number"
+                  id="num-passwords"
+                  min="1"
+                  max="100"
+                  value="3"
+                />
+              </div>
+              <div class="form-group" style="flex: 0 0 150px">
+                <label for="min-length">Minimum Length</label>
+                <input
+                  type="number"
+                  id="min-length"
+                  min="8"
+                  max="32"
+                  value="12"
+                />
+              </div>
+              <div class="form-group" style="flex: 1">
+                <label for="word-input">Add Words</label>
+                <div style="display: flex">
+                  <input
+                    type="text"
+                    id="word-input"
+                    placeholder="Enter word(s), space separated"
+                  />
+                  <button
+                    class="add-word-btn"
+                    onclick="addWord()"
+                    style="margin-left: 8px"
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div id="words-container" class="words-container">
+              <!-- Word chips will be added here -->
+            </div>
+
+            <button class="generate-btn" onclick="generatePasswords()">
+              Generate Passwords
+            </button>
+          </div>
+
+          <div id="password-results" class="password-results">
+            <!-- Password results will be displayed here -->
+          </div>
+        </div>
+
+        <div style="flex: 0 0 400px; height: 400px" class="meme-container">
+          <div class="meme-placeholder">
+            <img
+              src="/soypw.webp"
+              alt="Soyjack Password"
+              style="
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: none;
+              "
+              id="meme-image"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Store words
+      let words = [];
+
+      // Add one or more words to the list
+      function addWord() {
+        const wordInput = document.getElementById("word-input");
+        const inputValue = wordInput.value.trim();
+
+        if (!inputValue) {
+          alert("Please enter at least one word");
+          return;
+        }
+
+        // Split by spaces to handle multiple words
+        const newWords = inputValue.split(" ").filter((w) => w.trim());
+
+        let validWordsAdded = false;
+
+        for (const word of newWords) {
+          const trimmedWord = word.trim();
+          if (trimmedWord && trimmedWord.length >= 3) {
+            words.push(trimmedWord);
+            validWordsAdded = true;
+          }
+        }
+
+        if (validWordsAdded) {
+          renderWords();
+          wordInput.value = "";
+        } else {
+          alert("Please enter at least one word with 3 or more characters");
+        }
+      }
+
+      // Remove a word from the list
+      function removeWord(index) {
+        words.splice(index, 1);
+        renderWords();
+      }
+
+      // Render the word chips
+      function renderWords() {
+        const wordsContainer = document.getElementById("words-container");
+        wordsContainer.innerHTML = "";
+
+        words.forEach((word, index) => {
+          const chip = document.createElement("div");
+          chip.className = "word-chip";
+          chip.innerHTML = `
+                    ${word}
+                    <button onclick="removeWord(${index})">×</button>
+                `;
+          wordsContainer.appendChild(chip);
+        });
+      }
+
+      // Function to capitalize random characters in a word
+      function capitalizeRandom(word) {
+        let result = "";
+        for (let i = 0; i < word.length; i++) {
+          const char = word[i];
+          // 50% chance to capitalize
+          if (Math.random() < 0.5) {
+            result += char.toUpperCase();
+          } else {
+            result += char.toLowerCase();
+          }
+        }
+        return result;
+      }
+
+      // Function to replace some characters with numbers and symbols
+      function replaceChars(word) {
+        const replacements = {
+          a: ["4", "@"],
+          e: ["3", "€"],
+          i: ["1", "!"],
+          o: ["0", "*"],
+          s: ["$", "5"],
+          t: ["+", "7"],
+          b: ["8", "&"],
+          z: ["2", "%"],
+        };
+
+        let result = "";
+        let eligibleChars = 0;
+
+        // Count eligible characters
+        for (let i = 0; i < word.length; i++) {
+          const char = word[i].toLowerCase();
+          if (replacements[char]) {
+            eligibleChars++;
+          }
+        }
+
+        // Calculate max number of replacements (30% of eligible chars)
+        const maxReplacements = Math.ceil(eligibleChars * 0.3);
+        let replacementsMade = 0;
+
+        for (let i = 0; i < word.length; i++) {
+          const char = word[i];
+          const lowerChar = char.toLowerCase();
+          let replaced = false;
+
+          if (replacementsMade < maxReplacements && replacements[lowerChar]) {
+            // 40% chance to replace
+            if (Math.random() < 0.4) {
+              const replOptions = replacements[lowerChar];
+              // 75% chance for number, 25% for symbol
+              const replChoice =
+                Math.random() < 0.75 ? replOptions[0] : replOptions[1];
+              result += replChoice;
+              replaced = true;
+              replacementsMade++;
+            }
+          }
+
+          if (!replaced) {
+            result += char;
+          }
+        }
+
+        return result;
+      }
+
+      // Function to insert special characters
+      function insertSpecialChars(password, minSpecials) {
+        let result = password;
+        const specialChars = "!@#%^&*()_+-=.?";
+
+        if (/[A-Z]/.test(result) && result.length > 6) {
+          let newResult = "";
+          let prevChar = "";
+          let inserted = 0;
+
+          // Look for word boundaries
+          for (let i = 0; i < result.length; i++) {
+            const char = result[i];
+
+            // If capital letter not at beginning, insert separator
+            if (/[A-Z]/.test(char) && i > 0 && inserted < minSpecials) {
+              if (!/[^a-zA-Z0-9]/.test(prevChar)) {
+                const special =
+                  specialChars[Math.floor(Math.random() * specialChars.length)];
+                newResult += special;
+                inserted++;
+              }
+            }
+
+            newResult += char;
+            prevChar = char;
+          }
+
+          // Add remaining special chars
+          while (inserted < minSpecials) {
+            const special =
+              specialChars[Math.floor(Math.random() * specialChars.length)];
+
+            // 70% chance to add at end, 30% at beginning
+            if (Math.random() < 0.7) {
+              newResult += special;
+            } else {
+              newResult = special + newResult;
+            }
+
+            inserted++;
+          }
+
+          result = newResult;
+        } else {
+          // Fallback to original method
+          for (let i = 0; i < minSpecials; i++) {
+            const position = Math.floor(Math.random() * (result.length + 1));
+            const special =
+              specialChars[Math.floor(Math.random() * specialChars.length)];
+            result =
+              result.substring(0, position) +
+              special +
+              result.substring(position);
+          }
+        }
+
+        return result;
+      }
+
+      // Function to insert numbers
+      function insertNumbers(password, minNumbers) {
+        let result = password;
+
+        for (let i = 0; i < minNumbers; i++) {
+          const position = Math.floor(Math.random() * (result.length + 1));
+          const number = Math.floor(Math.random() * 10);
+          result =
+            result.substring(0, position) + number + result.substring(position);
+        }
+
+        return result;
+      }
+
+      // Function to calculate password strength
+      function calculateStrength(password) {
+        const length = password.length;
+        let hasLower = /[a-z]/.test(password) ? 1 : 0;
+        let hasUpper = /[A-Z]/.test(password) ? 1 : 0;
+        let hasDigit = /[0-9]/.test(password) ? 1 : 0;
+        let hasSpecial = /[^a-zA-Z0-9]/.test(password) ? 1 : 0;
+
+        const diversity = hasLower + hasUpper + hasDigit + hasSpecial;
+        const score = length * diversity;
+
+        if (score < 20) return { text: "Weak", class: "weak" };
+        if (score < 40) return { text: "Moderate", class: "moderate" };
+        if (score < 60) return { text: "Strong", class: "strong" };
+        return { text: "Very Strong", class: "very-strong" };
+      }
+
+      // Generate passwords
+      function generatePasswords() {
+        if (words.length === 0) {
+          alert("Please add at least one word");
+          return;
+        }
+
+        const numPasswords =
+          parseInt(document.getElementById("num-passwords").value) || 1;
+        const minLength =
+          parseInt(document.getElementById("min-length").value) || 12;
+
+        const resultsContainer = document.getElementById("password-results");
+        resultsContainer.innerHTML = "";
+        resultsContainer.style.display = "block";
+
+        for (let p = 1; p <= numPasswords; p++) {
+          let password = "";
+
+          // Process each word
+          for (const word of words) {
+            // Clean the word
+            const cleanedWord = word.replace(/[^a-zA-Z0-9]/g, "");
+
+            if (cleanedWord.length < 3) continue;
+
+            // Apply transformations
+            let modifiedWord = capitalizeRandom(cleanedWord);
+            modifiedWord = replaceChars(modifiedWord);
+
+            // Add to password
+            password += modifiedWord;
+          }
+
+          // Add special characters and numbers
+          password = insertSpecialChars(password, 2);
+          password = insertNumbers(password, 1);
+
+          // Ensure minimum length
+          while (password.length < minLength) {
+            if (Math.random() < 0.5) {
+              password = insertSpecialChars(password, 1);
+            } else {
+              password = insertNumbers(password, 1);
+            }
+          }
+
+          // Determine password strength
+          const strength = calculateStrength(password);
+
+          // Create password card
+          const card = document.createElement("div");
+          card.className = "password-card";
+          card.innerHTML = `
+                    <div class="password-display">
+                        <span>${password}</span>
+                        <button class="copy-btn" onclick="copyPassword('${password}')">Copy</button>
+                    </div>
+                    <div class="password-stats">
+                        <span>Length: ${password.length} characters</span>
+                        <span>Strength: <span class="strength ${strength.class}">${strength.text}</span></span>
+                    </div>
+                `;
+
+          resultsContainer.appendChild(card);
+        }
+      }
+
+      // Copy password to clipboard
+      function copyPassword(password) {
+        navigator.clipboard
+          .writeText(password)
+          .then(() => {
+            alert("Password copied to clipboard!");
+          })
+          .catch((err) => {
+            console.error("Could not copy text: ", err);
+          });
+      }
+
+      // Add event listener for enter key on word input
+      document
+        .getElementById("word-input")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            addWord();
+          }
+        });
+    </script>
+  </body>
+</html>
